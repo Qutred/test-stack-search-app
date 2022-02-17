@@ -24,7 +24,7 @@ const FastView = props => {
           Search by {viewType}: {searchName}
         </Typography>
         {loading.status === 'loading' ? (
-          <Loader />
+          <Loader extraStyles={{ margin: '50px auto' }} />
         ) : data.length === 0 ? (
           'No data'
         ) : (

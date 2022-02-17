@@ -6,7 +6,7 @@ const Home = () => {
   const navigate = useNavigate();
 
   const handleSearch = searchQuery => {
-    navigate(`/results/?q=${searchQuery}`);
+    navigate(`/results?q=${searchQuery}`);
   };
 
   return <SearchForm handleSearch={handleSearch} />;

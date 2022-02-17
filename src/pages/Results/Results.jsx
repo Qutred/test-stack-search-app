@@ -9,7 +9,6 @@ import EmptySearchResults from '../../components/EmptySearchResults/EmptySearchR
 import { useSearchLoading } from '../../store/slices/searchSlice';
 import Loader from '../../components/Loader/Loader';
 import QuestionTable from '../../components/QuestionTable/QuestionTable';
-import Drawer from '@mui/material/Drawer';
 import { fetchUserQuestions } from '../../store/slices/userQuestionsSlice';
 import {
   useUserQuestions,

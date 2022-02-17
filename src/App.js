@@ -3,6 +3,7 @@ import { Routes, Route, Link } from 'react-router-dom';
 import Home from './pages/Home/Home';
 import Container from '@mui/material/Container';
 import Results from './pages/Results/Results';
+import Question from './pages/Question/Question';
 
 function App() {
   return (
@@ -10,6 +11,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/results" element={<Results />} />
+        <Route path="/question/:questionId" element={<Question />} />
         <Route
           path="*"
           element={
