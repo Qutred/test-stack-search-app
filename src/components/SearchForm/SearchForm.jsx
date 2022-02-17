@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useRef, useState } from 'react';
+import React, { forwardRef, useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
@@ -61,7 +61,7 @@ const TextFieldStyles = {
 const SearchForm = forwardRef((props, ref) => {
   const { handleSearch = () => {} } = props;
 
-  let [searchParams, setSearchParams] = useSearchParams();
+  let [searchParams] = useSearchParams();
   const [searchInput, setSearchInput] = useState({
     value: searchParams.get('q') || '',
     error: false,
