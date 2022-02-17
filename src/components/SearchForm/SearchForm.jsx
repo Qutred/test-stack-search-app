@@ -1,8 +1,8 @@
-import React, { forwardRef, useRef, useState } from 'react';
+import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useLocation } from 'react-router-dom';
 
 const StyledForm = styled.div(props => ({
   padding: '30px 20px',
@@ -67,6 +67,7 @@ const SearchForm = forwardRef((props, ref) => {
     error: false,
     errorMessage: '',
   });
+  let location = useLocation();
 
   const onSearchClick = e => {
     e.preventDefault();
@@ -94,6 +95,15 @@ const SearchForm = forwardRef((props, ref) => {
       };
     });
   };
+
+  useEffect(() => {
+    if (searchParams.has('q')) {
+      setSearchInput(prevState => ({
+        ...prevState,
+        value: searchParams.get('q'),
+      }));
+    }
+  }, [location, searchParams]);
 
   return (
     <StyledForm>

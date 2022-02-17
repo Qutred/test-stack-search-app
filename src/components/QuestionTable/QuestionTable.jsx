@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -9,6 +9,7 @@ import Paper from '@mui/material/Paper';
 import Tag from '../Tags/Tag';
 import Box from '@mui/material/Box';
 import SmallLinkTitle from '../SmallLinkTitle/SmallLinkTitle';
+import SmallTitle from '../SmallTitle/SmallTitle';
 import TablePagination from '@mui/material/TablePagination';
 
 const tableHeadStyles = {
@@ -17,16 +18,27 @@ const tableHeadStyles = {
 };
 
 const QuestionTable = props => {
-  const { data, handleChangeRowsPerPage, handleChangePage, page, rowsPerPage } =
-    props;
+  const { data, onAuthorClick, onTagClick, extraStyles = {} } = props;
 
-  const getSliceData = () => {
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  const getPortion = () => {
     return data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+  };
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = event => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
   };
 
   return (
     <>
-      <TableContainer component={Paper}>
+      <TableContainer component={Paper} sx={extraStyles}>
         <Table aria-label="simple question table" stickyHeader>
           <TableHead>
             <TableRow>
@@ -45,15 +57,21 @@ const QuestionTable = props => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {getSliceData().map(info => (
+            {getPortion().map(info => (
               <TableRow
                 key={info.question_id}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
               >
-                <TableCell align="left">
-                  <SmallLinkTitle href={info.owner.link}>
-                    {info.owner.display_name}
-                  </SmallLinkTitle>
+                <TableCell
+                  align="left"
+                  onClick={() =>
+                    onAuthorClick({
+                      userId: info.owner.user_id,
+                      userName: info.owner.display_name,
+                    })
+                  }
+                >
+                  <SmallTitle>{info.owner.display_name}</SmallTitle>
                 </TableCell>
                 <TableCell align="left">
                   <SmallLinkTitle href={info.link}>{info.title}</SmallLinkTitle>
@@ -62,7 +80,11 @@ const QuestionTable = props => {
                 <TableCell align="left">
                   <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
                     {info.tags.map(tag => {
-                      return <Tag key={tag}>{tag}</Tag>;
+                      return (
+                        <Tag key={tag} onTagClick={() => onTagClick(tag)}>
+                          {tag}
+                        </Tag>
+                      );
                     })}
                   </Box>
                 </TableCell>
@@ -72,7 +94,7 @@ const QuestionTable = props => {
         </Table>
       </TableContainer>
       <TablePagination
-        rowsPerPageOptions={[10, 25, 100]}
+        rowsPerPageOptions={[5, 10, 25, 100]}
         component="div"
         count={data.length}
         rowsPerPage={rowsPerPage}
