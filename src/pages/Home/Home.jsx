@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import SearchForm from '../../components/SearchForm/SearchForm';
-import { useLocation, useMatch, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
   const navigate = useNavigate();

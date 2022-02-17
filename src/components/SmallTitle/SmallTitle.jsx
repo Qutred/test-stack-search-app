@@ -1,6 +1,5 @@
 import React from 'react';
 import Typography from '@mui/material/Typography';
-import styled from '@emotion/styled';
 
 const SmallTitle = ({ children }) => {
   return (
