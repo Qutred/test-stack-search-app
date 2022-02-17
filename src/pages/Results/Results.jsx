@@ -1,56 +1,66 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import SearchForm from '../../components/SearchForm/SearchForm';
 import styled from '@emotion/styled';
 import QuestionItem from '../../components/QuestionItem/QuestionItem';
-import { useSearchParams, useLocation } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchQuestions } from './../../store/slices/searchSlice';
 import { useSearchResults } from './../../store/slices/searchSlice';
-import CircularProgress from '@mui/material/CircularProgress';
+import EmptySearchResults from '../../components/EmptySearchResults/EmptySearchResults';
+import { useSearchLoading } from '../../store/slices/searchSlice';
+import Loader from '../../components/Loader/Loader';
+import QuestionTable from '../../components/QuestionTable/QuestionTable';
 
 const ResultsContainerStyled = styled.div`
-  max-width: 800px;
   margin: 50px auto 0 auto;
 `;
 
 const Results = () => {
   let [searchParams, setSearchParams] = useSearchParams();
-  let location = useLocation();
   const dispatch = useDispatch();
+  const searchQuery = searchParams.get('q');
   const searchResults = useSelector(useSearchResults);
+  const searchLoading = useSelector(useSearchLoading);
+
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = event => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
 
   useEffect(() => {
-    if (searchParams.has('q')) {
-      let searchQuery = searchParams.get('q');
+    if (searchQuery) {
       dispatch(fetchQuestions(searchQuery));
     }
-  }, []);
+  }, [dispatch, searchQuery]);
+
+  const handleSearch = searchQuery => {
+    setSearchParams({ q: searchQuery });
+  };
 
   return (
     <>
-      <SearchForm />
+      <SearchForm handleSearch={handleSearch} />
       <ResultsContainerStyled>
-        {searchResults.map(searchResult => {
-          const {
-            title,
-            answer_count,
-            tags,
-            link,
-            owner: { profile_image, display_name, link: authorLink },
-          } = searchResult;
-          return (
-            <QuestionItem
-              key={searchResult.question_id}
-              title={title}
-              answerCount={answer_count}
-              tags={tags}
-              authorImg={profile_image}
-              authorName={display_name}
-              authorLink={authorLink}
-              link={link}
-            />
-          );
-        })}
+        {searchLoading.status === 'loading' ? (
+          <Loader />
+        ) : searchResults.length === 0 ? (
+          <EmptySearchResults searchQuery={searchQuery} />
+        ) : (
+          <QuestionTable
+            data={searchResults}
+            handleChangePage={handleChangePage}
+            handleChangeRowsPerPage={handleChangeRowsPerPage}
+            rowsPerPage={rowsPerPage}
+            page={page}
+          />
+        )}
       </ResultsContainerStyled>
     </>
   );

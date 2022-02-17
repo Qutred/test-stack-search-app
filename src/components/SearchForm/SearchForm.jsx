@@ -2,15 +2,18 @@ import React, { forwardRef, useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import { useSearchParams, useLocation } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 
-const StyledForm = styled.div`
-  padding: 30px 20px;
-  max-width: 600px;
-  margin: 0 auto;
-  background: var(--color-grey-darker);
-  border-radius: 12px;
-`;
+const StyledForm = styled.div(props => ({
+  padding: '30px 20px',
+  maxWidth: '600px',
+  margin: '0 auto',
+  background: 'var(--color-white)',
+  borderRadius: '2px',
+  borderBottomLeftRadius: '12px',
+  borderBottomRightRadius: '12px',
+  ...props.extraStyles,
+}));
 
 const StyledTitle = styled.h1`
   color: var(--color-orange);
@@ -57,9 +60,10 @@ const TextFieldStyles = {
 
 const SearchForm = forwardRef((props, ref) => {
   const { handleSearch = () => {} } = props;
+
   let [searchParams, setSearchParams] = useSearchParams();
   const [searchInput, setSearchInput] = useState({
-    value: searchParams.get('q') || 0,
+    value: searchParams.get('q') || '',
     error: false,
     errorMessage: '',
   });

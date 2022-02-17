@@ -11,6 +11,7 @@ const QuestionContainer = styled.div`
   padding: 15px;
   border-bottom: 1px solid var(--color-orange);
   display: flex;
+  align-items: center;
 `;
 
 const QuestionLeftStyled = styled.div`

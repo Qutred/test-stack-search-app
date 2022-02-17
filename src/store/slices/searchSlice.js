@@ -50,5 +50,6 @@ export const searchSlice = createSlice({
 //export const { increment, decrement, incrementByAmount } = searchSlice.actions;
 
 export const useSearchResults = state => state.searchSlice.searchResults;
+export const useSearchLoading = state => state.searchSlice.loading;
 
 export default searchSlice.reducer;
