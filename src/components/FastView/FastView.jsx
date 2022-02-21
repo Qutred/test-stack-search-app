@@ -12,9 +12,8 @@ const FastView = props => {
     searchName,
     loading,
     data,
-    onAuthorClick,
-    onTagClick,
     anchor,
+    onFastViewOpen,
   } = props;
 
   return (
@@ -30,9 +29,8 @@ const FastView = props => {
         ) : (
           <QuestionTable
             data={data}
-            onAuthorClick={onAuthorClick}
-            onTagClick={onTagClick}
             extraStyles={{ maxHeight: '60vh' }}
+            onFastViewOpen={onFastViewOpen}
           />
         )}
       </Container>

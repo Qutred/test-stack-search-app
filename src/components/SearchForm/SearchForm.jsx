@@ -4,16 +4,18 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { useSearchParams, useLocation } from 'react-router-dom';
 
-const StyledForm = styled.div(props => ({
-  padding: '30px 20px',
-  maxWidth: '600px',
-  margin: '0 auto',
-  background: 'var(--color-white)',
-  borderRadius: '2px',
-  borderBottomLeftRadius: '12px',
-  borderBottomRightRadius: '12px',
-  ...props.extraStyles,
-}));
+const StyledForm = styled.div(props => {
+  return {
+    padding: '30px 20px',
+    maxWidth: '600px',
+    margin: '0 auto',
+    background: 'var(--color-white)',
+    borderRadius: '2px',
+    borderBottomLeftRadius: '12px',
+    borderBottomRightRadius: '12px',
+    ...props.extraStyles,
+  };
+});
 
 const StyledTitle = styled.h1`
   color: var(--color-orange);
@@ -80,7 +82,6 @@ const SearchForm = forwardRef((props, ref) => {
           errorMessage: 'The field cannot be empty.',
         };
       });
-      return;
     }
     handleSearch(searchInput.value);
   };

@@ -9,17 +9,13 @@ import EmptySearchResults from '../../components/EmptySearchResults/EmptySearchR
 import { useSearchLoading } from '../../store/slices/searchSlice';
 import Loader from '../../components/Loader/Loader';
 import QuestionTable from '../../components/QuestionTable/QuestionTable';
-import { fetchUserQuestions } from '../../store/slices/userQuestionsSlice';
-import {
-  useUserQuestions,
-  useUserQuestionsLoading,
-} from '../../store/slices/userQuestionsSlice';
-import {
-  useTagData,
-  useTagDataLoading,
-  fetchDataByTag,
-} from '../../store/slices/tagDataSlice';
 import FastView from '../../components/FastView/FastView';
+import {
+  fetchDataByTag,
+  fetchUserQuestions,
+  useSearchByData,
+  useSearchByLoading,
+} from '../../store/slices/searchBySlice';
 
 const ResultsContainerStyled = styled.div`
   margin: 50px auto 0 auto;
@@ -39,11 +35,8 @@ const Results = () => {
   let [searchParams, setSearchParams] = useSearchParams();
   const searchQuery = searchParams.get('q');
 
-  const userQuestions = useSelector(useUserQuestions);
-  const userQuestionsLoading = useSelector(useUserQuestionsLoading);
-
-  const tagData = useSelector(useTagData);
-  const tagDataLoading = useSelector(useTagDataLoading);
+  const searchByData = useSelector(useSearchByData);
+  const searchByLoading = useSelector(useSearchByLoading);
 
   const dispatch = useDispatch();
 
@@ -54,7 +47,7 @@ const Results = () => {
 
   /* on author cell click handler */
   const onAuthorClick = ({ userId, userName }) => {
-    dispatch(fetchUserQuestions({ userId, userName }));
+    dispatch(fetchUserQuestions({ userId }));
     setFastView(prevState => ({
       ...prevState,
       isOpen: true,
@@ -65,7 +58,6 @@ const Results = () => {
 
   /* on tag cell click handler */
   const onTagClick = tagName => {
-    console.log(tagName);
     dispatch(fetchDataByTag(tagName));
 
     setFastView(prevState => ({
@@ -76,12 +68,27 @@ const Results = () => {
     }));
   };
 
-  /* get actual fast view data  */
-  const getFastViewData = () => {
-    if (fastView.viewType === fastViewTypes.author) {
-      return [userQuestions, userQuestionsLoading];
-    } else if (fastView.viewType === fastViewTypes.tag) {
-      return [tagData, tagDataLoading];
+  const onFastViewOpen = props => {
+    console.log(props);
+    const { type } = props;
+    if (type === fastViewTypes.author) {
+      const { userId, userName } = props;
+      dispatch(fetchUserQuestions({ userId }));
+      setFastView(prevState => ({
+        ...prevState,
+        isOpen: true,
+        viewType: fastViewTypes.author,
+        searchName: userName,
+      }));
+    } else if (type === fastViewTypes.tag) {
+      const { tag } = props;
+      dispatch(fetchDataByTag(tag));
+      setFastView(prevState => ({
+        ...prevState,
+        isOpen: true,
+        viewType: fastViewTypes.tag,
+        searchName: tag,
+      }));
     }
   };
 
@@ -97,13 +104,6 @@ const Results = () => {
     }
   }, [dispatch, searchQuery]);
 
-  /*  Get active data for fast view */
-  let fastViewData, fastViewLoading;
-
-  if (fastView.viewType !== null) {
-    [fastViewData, fastViewLoading] = getFastViewData();
-  }
-
   return (
     <>
       <SearchForm handleSearch={handleSearch} />
@@ -113,11 +113,7 @@ const Results = () => {
         ) : searchResults.length === 0 ? (
           <EmptySearchResults searchQuery={searchQuery} />
         ) : (
-          <QuestionTable
-            data={searchResults}
-            onAuthorClick={onAuthorClick}
-            onTagClick={onTagClick}
-          />
+          <QuestionTable data={searchResults} onFastViewOpen={onFastViewOpen} />
         )}
       </ResultsContainerStyled>
       {fastView.viewType !== null && (
@@ -128,10 +124,11 @@ const Results = () => {
           isOpen={fastView.isOpen}
           viewType={fastView.viewType}
           searchName={fastView.searchName}
-          loading={fastViewLoading}
-          data={fastViewData}
+          loading={searchByLoading}
+          data={searchByData}
           onAuthorClick={onAuthorClick}
           onTagClick={onTagClick}
+          onFastViewOpen={onFastViewOpen}
         ></FastView>
       )}
     </>

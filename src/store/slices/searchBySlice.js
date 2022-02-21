@@ -1,8 +1,9 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getDataByTag } from './../../api/stackService';
+import { getDataByTag, getUserQuestions } from '../../api/stackService';
 
+/*  fetch data for choosed tag */
 export const fetchDataByTag = createAsyncThunk(
-  'tagData/fetchUserQuestions',
+  'searchBy/fetchUserQuestions',
   async (tagName, { rejectWithValue }) => {
     try {
       let response = await getDataByTag({ tag: tagName });
@@ -17,16 +18,33 @@ export const fetchDataByTag = createAsyncThunk(
   }
 );
 
+/* fetch data for choosed user questions */
+export const fetchUserQuestions = createAsyncThunk(
+  'searchBy/fetchUserQuestions',
+  async ({ userId }, { rejectWithValue }) => {
+    try {
+      let response = await getUserQuestions({ userId: userId });
+
+      if (response.status !== 200) {
+        throw new Error('Some Server Error');
+      }
+      return response.data.items;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 const initialState = {
-  tagData: [],
+  data: [],
   loading: {
     status: 'idle',
     error: null,
   },
 };
 
-export const tagDataSlice = createSlice({
-  name: 'tagData',
+export const searchBySlice = createSlice({
+  name: 'searchBy',
   initialState,
   reducers: {},
   extraReducers: {
@@ -37,7 +55,7 @@ export const tagDataSlice = createSlice({
     [fetchDataByTag.fulfilled]: (state, action) => {
       state.loading.status = 'resolved';
       state.loading.error = null;
-      state.tagData = action.payload;
+      state.data = action.payload;
     },
     [fetchDataByTag.rejected]: (state, action) => {
       state.loading.status = 'rejected';
@@ -46,7 +64,7 @@ export const tagDataSlice = createSlice({
   },
 });
 
-export const useTagData = state => state.tagDataSlice.tagData;
-export const useTagDataLoading = state => state.tagDataSlice.loading;
+export const useSearchByData = state => state.searchBySlice.data;
+export const useSearchByLoading = state => state.searchBySlice.loading;
 
-export default tagDataSlice.reducer;
+export default searchBySlice.reducer;

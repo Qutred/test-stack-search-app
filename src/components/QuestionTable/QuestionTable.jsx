@@ -11,6 +11,7 @@ import Box from '@mui/material/Box';
 import SmallLinkTitle from '../SmallLinkTitle/SmallLinkTitle';
 import SmallTitle from '../SmallTitle/SmallTitle';
 import TablePagination from '@mui/material/TablePagination';
+import Avatar from '../Avatar/Avatar';
 
 const tableHeadStyles = {
   backgroundColor: 'var(--color-orange)',
@@ -18,7 +19,7 @@ const tableHeadStyles = {
 };
 
 const QuestionTable = props => {
-  const { data, onAuthorClick, onTagClick, extraStyles = {} } = props;
+  const { data, onFastViewOpen, extraStyles = {} } = props;
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -42,7 +43,7 @@ const QuestionTable = props => {
         <Table aria-label="simple question table" stickyHeader>
           <TableHead>
             <TableRow>
-              <TableCell sx={tableHeadStyles} align="left">
+              <TableCell sx={tableHeadStyles} align="center">
                 Author
               </TableCell>
               <TableCell sx={tableHeadStyles} align="left">
@@ -63,14 +64,20 @@ const QuestionTable = props => {
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
               >
                 <TableCell
-                  align="left"
+                  align="center"
                   onClick={() =>
-                    onAuthorClick({
+                    onFastViewOpen({
+                      type: 'author',
                       userId: info.owner.user_id,
                       userName: info.owner.display_name,
                     })
                   }
                 >
+                  <Avatar
+                    src={info.owner.profile_image}
+                    alt={info.owner.display_name}
+                    extraStyles={{ marginBottom: '5px' }}
+                  />
                   <SmallTitle>{info.owner.display_name}</SmallTitle>
                 </TableCell>
                 <TableCell align="left">
@@ -81,7 +88,12 @@ const QuestionTable = props => {
                   <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
                     {info.tags.map(tag => {
                       return (
-                        <Tag key={tag} onTagClick={() => onTagClick(tag)}>
+                        <Tag
+                          key={tag}
+                          onTagClick={() =>
+                            onFastViewOpen({ type: 'tag', tag })
+                          }
+                        >
                           {tag}
                         </Tag>
                       );
