@@ -82,8 +82,9 @@ const SearchForm = forwardRef((props, ref) => {
           errorMessage: 'The field cannot be empty.',
         };
       });
+    } else {
+      handleSearch(searchInput.value);
     }
-    handleSearch(searchInput.value);
   };
 
   const handleInputChange = e => {

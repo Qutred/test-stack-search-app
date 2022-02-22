@@ -4,15 +4,23 @@ import { getDataByTag, getUserQuestions } from '../../api/stackService';
 /*  fetch data for choosed tag */
 export const fetchDataByTag = createAsyncThunk(
   'searchBy/fetchUserQuestions',
-  async (tagName, { rejectWithValue }) => {
+  async ({ tag, page, pagesize }, { rejectWithValue }) => {
     try {
-      let response = await getDataByTag({ tag: tagName });
+      let response = await getDataByTag({ tag, page, pagesize });
 
       if (response.status !== 200) {
         throw new Error('Some Server Error');
       }
-      return response.data.items;
+
+      return {
+        items: response.data.items,
+        total: response.data.total,
+        has_more: response.data.has_more,
+      };
     } catch (error) {
+      if (error.response) {
+        return rejectWithValue(error.response.data.error_message);
+      }
       return rejectWithValue(error.message);
     }
   }
@@ -21,22 +29,33 @@ export const fetchDataByTag = createAsyncThunk(
 /* fetch data for choosed user questions */
 export const fetchUserQuestions = createAsyncThunk(
   'searchBy/fetchUserQuestions',
-  async ({ userId }, { rejectWithValue }) => {
+  async ({ userId, page, pagesize }, { rejectWithValue }) => {
     try {
-      let response = await getUserQuestions({ userId: userId });
+      let response = await getUserQuestions({ userId: userId, page, pagesize });
 
       if (response.status !== 200) {
         throw new Error('Some Server Error');
       }
-      return response.data.items;
+      return {
+        items: response.data.items,
+        total: response.data.total,
+        has_more: response.data.has_more,
+      };
     } catch (error) {
+      if (error.response) {
+        return rejectWithValue(error.response.data.error_message);
+      }
       return rejectWithValue(error.message);
     }
   }
 );
 
 const initialState = {
-  data: [],
+  data: {
+    items: [],
+    total: null,
+    has_more: null,
+  },
   loading: {
     status: 'idle',
     error: null,

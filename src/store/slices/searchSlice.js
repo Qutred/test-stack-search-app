@@ -3,22 +3,33 @@ import { seachByQuery } from './../../api/stackService';
 
 export const fetchQuestions = createAsyncThunk(
   'search/fetchQuestions',
-  async (searchQuery, { rejectWithValue }) => {
+  async ({ intitle, page, pagesize }, { rejectWithValue }) => {
     try {
-      let response = await seachByQuery({ intitle: searchQuery });
-
+      let response = await seachByQuery({ intitle, page, pagesize });
+      debugger;
       if (response.status !== 200) {
         throw new Error('Some Server Error');
       }
-      return response.data.items;
+      return {
+        items: response.data.items,
+        total: response.data.total,
+        has_more: response.data.has_more,
+      };
     } catch (error) {
+      if (error.response) {
+        return rejectWithValue(error.response.data.error_message);
+      }
       return rejectWithValue(error.message);
     }
   }
 );
 
 const initialState = {
-  searchResults: [],
+  searchResults: {
+    items: [],
+    total: null,
+    has_more: null,
+  },
   loading: {
     status: 'idle',
     error: null,

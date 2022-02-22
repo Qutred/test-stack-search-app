@@ -19,23 +19,15 @@ const tableHeadStyles = {
 };
 
 const QuestionTable = props => {
-  const { data, onFastViewOpen, extraStyles = {} } = props;
-
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
-
-  const getPortion = () => {
-    return data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-  };
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = event => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
+  const {
+    page,
+    pageSize,
+    handleChangePage,
+    handleChangePageSize,
+    data,
+    onFastViewOpen,
+    extraStyles = {},
+  } = props;
 
   return (
     <>
@@ -58,61 +50,66 @@ const QuestionTable = props => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {getPortion().map(info => (
-              <TableRow
-                key={info.question_id}
-                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-              >
-                <TableCell
-                  align="center"
-                  onClick={() =>
-                    onFastViewOpen({
-                      type: 'author',
-                      userId: info.owner.user_id,
-                      userName: info.owner.display_name,
-                    })
-                  }
+            {data.items.length &&
+              data.items.map(info => (
+                <TableRow
+                  key={info.question_id}
+                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 >
-                  <Avatar
-                    src={info.owner.profile_image}
-                    alt={info.owner.display_name}
-                    extraStyles={{ marginBottom: '5px' }}
-                  />
-                  <SmallTitle>{info.owner.display_name}</SmallTitle>
-                </TableCell>
-                <TableCell align="left">
-                  <SmallLinkTitle href={info.link}>{info.title}</SmallLinkTitle>
-                </TableCell>
-                <TableCell align="left">{info.answer_count}</TableCell>
-                <TableCell align="left">
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
-                    {info.tags.map(tag => {
-                      return (
-                        <Tag
-                          key={tag}
-                          onTagClick={() =>
-                            onFastViewOpen({ type: 'tag', tag })
-                          }
-                        >
-                          {tag}
-                        </Tag>
-                      );
-                    })}
-                  </Box>
-                </TableCell>
-              </TableRow>
-            ))}
+                  <TableCell
+                    align="center"
+                    onClick={() =>
+                      onFastViewOpen({
+                        type: 'author',
+                        userId: info.owner.user_id,
+                        userName: info.owner.display_name,
+                      })
+                    }
+                  >
+                    <Avatar
+                      src={info.owner.profile_image}
+                      alt={info.owner.display_name}
+                      extraStyles={{ marginBottom: '5px' }}
+                    />
+                    <SmallTitle>{info.owner.display_name}</SmallTitle>
+                  </TableCell>
+                  <TableCell align="left">
+                    <SmallLinkTitle href={info.link}>
+                      {info.title}
+                    </SmallLinkTitle>
+                  </TableCell>
+                  <TableCell align="left">{info.answer_count}</TableCell>
+                  <TableCell align="left">
+                    <Box
+                      sx={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}
+                    >
+                      {info.tags.map(tag => {
+                        return (
+                          <Tag
+                            key={tag}
+                            onTagClick={() =>
+                              onFastViewOpen({ type: 'tag', tag })
+                            }
+                          >
+                            {tag}
+                          </Tag>
+                        );
+                      })}
+                    </Box>
+                  </TableCell>
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
       </TableContainer>
       <TablePagination
         rowsPerPageOptions={[5, 10, 25, 100]}
         component="div"
-        count={data.length}
-        rowsPerPage={rowsPerPage}
+        count={Math.floor(data.total / pageSize)}
+        rowsPerPage={pageSize}
         page={page}
         onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
+        onRowsPerPageChange={handleChangePageSize}
       />
     </>
   );

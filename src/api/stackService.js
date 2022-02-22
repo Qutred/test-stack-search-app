@@ -9,6 +9,9 @@ export const seachByQuery = async props => {
     sort = 'relevance',
     site = 'stackoverflow',
     intitle = '',
+    page = 1,
+    pagesize = 5,
+    filter = '!6VvPDzQ)xanLb', //show page size and total amount
   } = props;
 
   return axios.get(`${baseUrl}/search/`, {
@@ -17,6 +20,9 @@ export const seachByQuery = async props => {
       sort,
       site,
       intitle,
+      page: page === 0 && 1,
+      pagesize,
+      filter,
     },
   });
 };
@@ -28,7 +34,10 @@ export const getUserQuestions = async props => {
     order = 'desc',
     sort = 'votes',
     site = 'stackoverflow',
+    page = 1,
+    pagesize = 5,
     userId,
+    filter = '!6VvPDzQ)xanLb', //show page size and total amount
   } = props;
 
   return axios.get(`${baseUrl}/users/${userId}/questions`, {
@@ -36,6 +45,9 @@ export const getUserQuestions = async props => {
       order,
       sort,
       site,
+      page: page === 0 && 1,
+      pagesize,
+      filter,
     },
   });
 };
@@ -43,7 +55,15 @@ export const getUserQuestions = async props => {
 /* --------------------------- Get data by tag -------------------------- */
 
 export const getDataByTag = async props => {
-  const { order = 'desc', sort = 'votes', site = 'stackoverflow', tag } = props;
+  const {
+    order = 'desc',
+    sort = 'votes',
+    site = 'stackoverflow',
+    tag,
+    page = 1,
+    pagesize = 5,
+    filter = '!6VvPDzQ)xanLb', //show page size and total amount
+  } = props;
 
   return axios.get(`${baseUrl}/search`, {
     params: {
@@ -51,6 +71,9 @@ export const getDataByTag = async props => {
       sort,
       site,
       tagged: tag,
+      page: page === 0 && 1,
+      pagesize,
+      filter,
     },
   });
 };
