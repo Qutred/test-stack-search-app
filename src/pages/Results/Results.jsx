@@ -12,8 +12,6 @@ import Loader from '../../components/Loader/Loader';
 import QuestionTable from '../../components/QuestionTable/QuestionTable';
 import FastView from '../../components/FastView/FastView';
 import {
-  fetchDataByTag,
-  fetchUserQuestions,
   useSearchByData,
   useSearchByLoading,
 } from '../../store/slices/searchBySlice';

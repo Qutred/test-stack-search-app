@@ -1,7 +1,6 @@
 import React from 'react';
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
-import { styled } from '@mui/material';
 
 const BtnCustomStyles = {
   color: 'var(--color-orange)',
