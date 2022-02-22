@@ -61,7 +61,6 @@ const Results = () => {
     const { type } = props;
     if (type === fastViewTypes.author) {
       const { userId, userName } = props;
-      dispatch(fetchUserQuestions({ userId, page, pagesize: pageSize }));
       setFastView(prevState => ({
         ...prevState,
         isOpen: true,
@@ -71,7 +70,6 @@ const Results = () => {
       }));
     } else if (type === fastViewTypes.tag) {
       const { tag } = props;
-      dispatch(fetchDataByTag({ tag, page, pagesize: pageSize }));
       setFastView(prevState => ({
         ...prevState,
         isOpen: true,

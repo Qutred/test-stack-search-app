@@ -38,6 +38,7 @@ const FastView = props => {
 
   /* if page or pageSize change */
   useEffect(() => {
+    if (!isOpen) return;
     if (viewType === fastViewTypes.author) {
       dispatch(
         fetchUserQuestions({ ...dataForDispatch, page, pagesize: pageSize })
@@ -51,7 +52,7 @@ const FastView = props => {
         })
       );
     }
-  }, [dispatch, page, pageSize, dataForDispatch, viewType]);
+  }, [dispatch, page, pageSize, dataForDispatch, viewType, isOpen]);
 
   return (
     <Drawer anchor={anchor} open={isOpen} onClose={onClose}>

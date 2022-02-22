@@ -12,11 +12,29 @@ import SmallLinkTitle from '../SmallLinkTitle/SmallLinkTitle';
 import SmallTitle from '../SmallTitle/SmallTitle';
 import TablePagination from '@mui/material/TablePagination';
 import Avatar from '../Avatar/Avatar';
+import styled from '@emotion/styled';
+import { keyframes } from '@emotion/react';
 
 const tableHeadStyles = {
   backgroundColor: 'var(--color-orange)',
   color: 'var(--color-white)',
 };
+
+const FadeIn = keyframes`
+  0% {
+    opacity:0;
+  }
+  50% {
+    opacity:0.5;
+  }
+  100% {
+    opacity:1;
+  }
+`;
+
+const StyledTable = styled.div`
+  animation: ${FadeIn} 500ms ease forwards;
+`;
 
 const QuestionTable = props => {
   const {
@@ -30,7 +48,7 @@ const QuestionTable = props => {
   } = props;
 
   return (
-    <>
+    <StyledTable>
       <TableContainer component={Paper} sx={extraStyles}>
         <Table aria-label="simple question table" stickyHeader>
           <TableHead>
@@ -111,7 +129,7 @@ const QuestionTable = props => {
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangePageSize}
       />
-    </>
+    </StyledTable>
   );
 };
 
