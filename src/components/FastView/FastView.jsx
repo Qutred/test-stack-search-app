@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import Drawer from '@mui/material/Drawer';
 import Loader from '../../components/Loader/Loader';
+import Alert from '@mui/material/Alert';
 import QuestionTable from '../../components/QuestionTable/QuestionTable';
 import { Container, Typography } from '@mui/material';
 import useTableManipulator from '../../customHooks/useTableManipulator';
@@ -60,6 +61,8 @@ const FastView = props => {
         </Typography>
         {loading.status === 'loading' ? (
           <Loader extraStyles={{ margin: '50px auto' }} />
+        ) : loading.status === 'rejected' ? (
+          <Alert severity="error">{loading.error}</Alert>
         ) : data.length === 0 ? (
           'No data'
         ) : (

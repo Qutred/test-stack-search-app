@@ -4,6 +4,7 @@ import { seachByQuery } from './../../api/stackService';
 export const fetchQuestions = createAsyncThunk(
   'search/fetchQuestions',
   async ({ intitle, page, pagesize }, { rejectWithValue }) => {
+    debugger;
     try {
       let response = await seachByQuery({ intitle, page, pagesize });
       debugger;
