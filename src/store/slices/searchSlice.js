@@ -3,11 +3,10 @@ import { seachByQuery } from './../../api/stackService';
 
 export const fetchQuestions = createAsyncThunk(
   'search/fetchQuestions',
-  async ({ intitle, page, pagesize }, { rejectWithValue }) => {
-    debugger;
+  async ({ intitle, page, pagesize, sort }, { rejectWithValue }) => {
     try {
-      let response = await seachByQuery({ intitle, page, pagesize });
-      debugger;
+      let response = await seachByQuery({ intitle, page, pagesize, sort });
+
       if (response.status !== 200) {
         throw new Error('Some Server Error');
       }

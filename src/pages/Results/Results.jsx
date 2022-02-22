@@ -18,6 +18,7 @@ import {
   useSearchByLoading,
 } from '../../store/slices/searchBySlice';
 import useTableManipulator from '../../customHooks/useTableManipulator';
+import TableSort from '../../components/TableSort/TableSort';
 
 const ResultsContainerStyled = styled.div`
   margin: 50px auto 0 auto;
@@ -50,7 +51,13 @@ const Results = () => {
     handleChangePageSize,
   } = useTableManipulator({ page: 0, pagesize: 5 });
 
+  const [activeSortType, setActiveSortType] = useState('relevance');
+
   const dispatch = useDispatch();
+
+  const onChangeSortType = type => {
+    setActiveSortType(type);
+  };
 
   /* close fast view handler */
   const closeFastView = () => {
@@ -90,10 +97,15 @@ const Results = () => {
   useEffect(() => {
     if (searchQuery) {
       dispatch(
-        fetchQuestions({ intitle: searchQuery, page, pagesize: pageSize })
+        fetchQuestions({
+          intitle: searchQuery,
+          page,
+          pagesize: pageSize,
+          sort: activeSortType,
+        })
       );
     }
-  }, [dispatch, searchQuery, page, pageSize]);
+  }, [dispatch, searchQuery, page, pageSize, activeSortType]);
 
   return (
     <>
@@ -115,6 +127,26 @@ const Results = () => {
             setPageSize={setPageSize}
             handleChangePage={handleChangePage}
             handleChangePageSize={handleChangePageSize}
+            sortBlock={
+              <TableSort
+                activeSortType={activeSortType}
+                onChangeSortType={onChangeSortType}
+                sortTypes={[
+                  {
+                    type: 'relevance',
+                    name: 'Relevance',
+                  },
+                  {
+                    type: 'activity',
+                    name: 'Activity',
+                  },
+                  {
+                    type: 'votes',
+                    name: 'Votes',
+                  },
+                ]}
+              />
+            }
           />
         )}
       </ResultsContainerStyled>

@@ -45,10 +45,13 @@ const QuestionTable = props => {
     data,
     onFastViewOpen,
     extraStyles = {},
+    sortBlock,
   } = props;
 
+  console.log(sortBlock);
   return (
     <StyledTable>
+      {sortBlock && sortBlock}
       <TableContainer component={Paper} sx={extraStyles}>
         <Table aria-label="simple question table" stickyHeader>
           <TableHead>
